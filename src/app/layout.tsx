@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import '@mantine/core/styles.css';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
+import Navbar from '@/components/Navbar';
 
 export const metadata: Metadata = {
   title: 'Booklet',
@@ -14,12 +15,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <ColorSchemeScript />
       </head>
-      <body>
-        <MantineProvider>{children}</MantineProvider>
+      <body className="flex h-full w-full p-0">
+        <MantineProvider>
+          <Navbar />
+          {children}
+        </MantineProvider>
       </body>
     </html>
   );
