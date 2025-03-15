@@ -14,6 +14,7 @@ import classes from './Navbar.module.css';
 import BookletLogo from '../BookletLogo';
 import { DarkModeButton } from './DarkModeButton';
 import { AddNewButton } from '../AddNewButton';
+import Link from 'next/link';
 
 interface NavbarLinkProps {
   icon: typeof IconHome2;
@@ -22,7 +23,12 @@ interface NavbarLinkProps {
   onClick?: () => void;
 }
 
-function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
+function NavbarLink({
+  icon: Icon,
+  label,
+  active,
+  onClick,
+}: Readonly<NavbarLinkProps>) {
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
       <UnstyledButton
@@ -36,37 +42,43 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   );
 }
 
-const mockdata = [
-  { icon: IconHome2, label: 'Home' },
-  { icon: IconTable, label: 'Records' },
-  { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
-  { icon: IconLibraryPlus, label: 'Recommendations' },
-  { icon: IconUser, label: 'Account' },
-  { icon: IconInfoSquareRounded, label: 'About Us' },
+const navData = [
+  { icon: IconHome2, label: 'Home', value: '/' },
+  { icon: IconTable, label: 'Records', value: '/records' },
+  { icon: IconDeviceDesktopAnalytics, label: 'Analytics', value: '/analytics' },
+  {
+    icon: IconLibraryPlus,
+    label: 'Recommendations',
+    value: '/recommendations',
+  },
+  { icon: IconUser, label: 'Account', value: '/account' },
+  { icon: IconInfoSquareRounded, label: 'About Us', value: '/info' },
 ];
 
 export default function Navbar() {
   const [active, setActive] = useState(0);
 
-  const links = mockdata.map((link, index) => (
-    <NavbarLink
-      {...link}
-      key={link.label}
-      active={index === active}
-      onClick={() => setActive(index)}
-    />
+  const links = navData.map((link, index) => (
+    <Link key={link.label} href={link.value}>
+      <NavbarLink
+        {...link}
+        key={link.label}
+        active={index === active}
+        onClick={() => setActive(index)}
+      />
+    </Link>
   ));
 
   return (
     <nav className={classes.navbar}>
       <Center>
-        <BookletLogo size={40} stroke={2} color="white" />
+        <BookletLogo size={40} stroke={2} color="white" hidden={false} />
       </Center>
 
       <div className={classes.navbarMain}>
         <Stack justify="center" gap={0}>
           {links}
-          <AddNewButton showcontent={false} />
+          <AddNewButton showContent={false} />
         </Stack>
       </div>
 

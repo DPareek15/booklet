@@ -3,7 +3,7 @@ import { OptionsButton } from './OptionsButton';
 
 export function UserButton() {
   return (
-    <Group>
+    <Group visibleFrom="sm" className="mr-10">
       <Avatar radius="xl" />
 
       <div style={{ flex: 1 }}>

@@ -10,20 +10,23 @@ import {
   Text,
 } from '@mantine/core';
 import classes from './BookCard.module.css';
+import { MockdataType } from '@/data/mockdata';
+import { useDisclosure } from '@mantine/hooks';
+import ShowBookModal from '@/components/ShowBookModal';
 
-interface CardProps {
-  image: string;
-  title: string;
-  description: string;
-  categories: string[];
-}
-
-export function BookCard({ image, title, description, categories }: CardProps) {
-  const features = categories.map((badge) => (
+export function BookCard({
+  id,
+  title,
+  description,
+  image,
+  tags,
+}: Readonly<MockdataType>) {
+  const features = tags.map((badge) => (
     <Badge variant="light" key={badge}>
       {badge}
     </Badge>
   ));
+  const [opened, { open, close }] = useDisclosure(false);
 
   return (
     <Grid gutter="sm">
@@ -49,7 +52,8 @@ export function BookCard({ image, title, description, categories }: CardProps) {
           </Card.Section>
 
           <Group mt="xs">
-            <Button radius="md" style={{ flex: 1 }}>
+            <ShowBookModal opened={opened} onClose={close} bookId={id} />
+            <Button radius="md" style={{ flex: 1 }} onClick={open}>
               Show details
             </Button>
           </Group>
