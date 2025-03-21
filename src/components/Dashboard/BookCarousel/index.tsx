@@ -6,8 +6,8 @@ import { mockData as data } from '@/data/mockdata';
 
 export function BookCarousel() {
   const slides = data.map((item) => (
-    <Carousel.Slide key={item.title}>
-      <BookCard {...item} />
+    <Carousel.Slide key={item.bookName}>
+      <BookCard bookData={item} />
     </Carousel.Slide>
   ));
 

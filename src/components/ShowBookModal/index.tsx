@@ -1,29 +1,29 @@
-import { mockData } from '@/data/mockdata';
 import { Badge, Group, Image, Modal, Stack, Text, Title } from '@mantine/core';
+import { BookDataType } from '../AddBookForm';
 
-type Props = {
-  bookId: number;
+type BookModalProps = {
+  bookData: BookDataType;
   opened: boolean;
   onClose: () => void;
 };
 
-const ShowBookModal = ({ bookId, opened, onClose }: Props) => {
-  const bookData = mockData.filter((book) => {
-    return bookId === book.id;
-  });
-
+const ShowBookModal = ({
+  bookData,
+  opened,
+  onClose,
+}: Readonly<BookModalProps>) => {
   return (
     <Modal
       opened={opened}
       onClose={onClose}
-      title={<Title order={2}>{bookData[0].title}</Title>}
-      size="xl"
+      title={<Title order={2}>{bookData.bookName}</Title>}
+      size={800}
       centered
     >
       <Group justify="flex-start" align="flex-start">
         <Image
-          src={bookData[0].image}
-          alt={bookData[0].title}
+          src={bookData.coverPage}
+          alt={bookData.bookName}
           h={500}
           w="auto"
           fit="contain"
@@ -35,9 +35,9 @@ const ShowBookModal = ({ bookId, opened, onClose }: Props) => {
           align="stretch"
           gap="md"
         >
-          <Text size="lg">{bookData[0].description}</Text>
+          <Text size="lg">{bookData.description}</Text>
           <p>
-            {bookData[0].tags.map((tag) => (
+            {bookData.tags.map((tag) => (
               <Badge variant="default" key={tag} mr={'3px'}>
                 {tag}
               </Badge>

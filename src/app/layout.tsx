@@ -3,13 +3,13 @@ import './globals.css';
 import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
 import '@mantine/dates/styles.css';
-import {
-  MantineProvider,
-  ColorSchemeScript,
-  mantineHtmlProps,
-} from '@mantine/core';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import Navbar from '@/components/Navbar';
 import { MainHeader } from '@/components/Dashboard/MainHeader';
+
+dayjs.extend(customParseFormat);
 
 export const metadata: Metadata = {
   title: 'Booklet',
@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" {...mantineHtmlProps}>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <ColorSchemeScript />
       </head>
