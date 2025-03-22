@@ -1,7 +1,23 @@
 'use server';
 
-import { BookDataType } from '@/components/AddBookForm';
 import { mockData } from '@/data/mockdata';
+
+export interface BookDataType {
+  bookId: string;
+  bookName: string;
+  authorName: string;
+  description: string;
+  genre: string;
+  tags: string[];
+  startDate: Date;
+  endDate: Date;
+  coverPage: string;
+  publisherName: string;
+  isbnNumber?: string;
+  rating: number;
+  review?: string;
+  favourite: boolean;
+}
 
 export const getBooks = async (): Promise<BookDataType[]> => {
   await new Promise((resolve) => setTimeout(resolve, 250));

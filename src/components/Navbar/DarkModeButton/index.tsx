@@ -22,7 +22,7 @@ export function DarkModeButton() {
         size="xl"
         aria-label="Dark Mode"
       >
-        {computedColorScheme === 'light' ? (
+        {computedColorScheme === 'dark' ? (
           <IconSun className="w-[22px] h-[22px]" stroke={1.5} />
         ) : (
           <IconMoon className="w-[22px] h-[22px]" stroke={1.5} />

@@ -1,5 +1,5 @@
+import { BookDataType } from '@/app/actions/bookActions';
 import { Badge, Group, Image, Modal, Stack, Text, Title } from '@mantine/core';
-import { BookDataType } from '../AddBookForm';
 
 type BookModalProps = {
   bookData: BookDataType;

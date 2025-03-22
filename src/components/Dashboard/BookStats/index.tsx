@@ -1,9 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import isBetween from 'dayjs/plugin/isBetween';
-dayjs.extend(isBetween);
 import {
   Group,
   List,
@@ -24,6 +22,16 @@ const BookStats = () => {
   const [date, setDate] = useState(new Date());
   const [books, setBooks] = useState<string[]>([]);
 
+  useEffect(() => {
+    const list: string[] = [];
+    mockData.forEach((item) => {
+      if (date >= item.startDate && date <= item?.endDate) {
+        list.push(item.bookName);
+      }
+    });
+    setBooks(list);
+  }, [date]);
+
   return (
     <div className={classes.root}>
       <div className={classes.controls}>
@@ -31,20 +39,6 @@ const BookStats = () => {
           className={classes.control}
           onClick={() => {
             setDate((current) => dayjs(current).add(1, 'day').toDate());
-            const list: string[] = [];
-            mockData.forEach((book) => {
-              if (
-                dayjs(date).isBetween(
-                  dayjs(book.startDate),
-                  dayjs(book.endDate),
-                  'day',
-                  '[]'
-                )
-              ) {
-                books.push(book.title);
-              }
-            });
-            setBooks(list);
           }}
         >
           <IconChevronUp

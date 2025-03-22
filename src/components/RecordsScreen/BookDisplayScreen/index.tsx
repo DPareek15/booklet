@@ -1,6 +1,6 @@
 'use client';
 
-import { BookDataType } from '@/components/AddBookForm';
+import { BookDataType } from '@/app/actions/bookActions';
 import {
   ActionIcon,
   Badge,
@@ -16,7 +16,6 @@ import {
   Stack,
   Text,
   Textarea,
-  TextInput,
   Title,
 } from '@mantine/core';
 import {
@@ -27,6 +26,7 @@ import {
   IconTrash,
 } from '@tabler/icons-react';
 import dayjs from 'dayjs';
+import Link from 'next/link';
 
 type BookDisplayScreenProps = {
   bookData: BookDataType;
@@ -54,7 +54,9 @@ const BookDisplayScreen = ({ bookData }: BookDisplayScreenProps) => {
           />
           <ButtonGroup>
             <Button variant="default" w={75} h={45} radius="md">
-              <IconEdit size={28} stroke={1.5} />
+              <Link href={`edit-book/${bookData.bookId}`} replace={true}>
+                <IconEdit size={28} stroke={1.5} />
+              </Link>
             </Button>
             <Button variant="default" w={75} h={45}>
               {bookData.favourite ? (

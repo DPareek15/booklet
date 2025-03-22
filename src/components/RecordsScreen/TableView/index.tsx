@@ -4,9 +4,9 @@ import {
   IconChevronUp,
   IconDotsVertical,
   IconFileSymlink,
+  IconHeart,
   IconSearch,
   IconSelector,
-  IconStar,
   IconTrash,
 } from '@tabler/icons-react';
 import {
@@ -16,6 +16,7 @@ import {
   Group,
   Image,
   Menu,
+  Rating,
   ScrollArea,
   Table,
   Text,
@@ -23,13 +24,20 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import classes from './TableView.module.css';
-import { MockdataType } from '@/data/mockdata';
-import { useDisclosure } from '@mantine/hooks';
-import ShowBookModal from '@/components/ShowBookModal';
+import Link from 'next/link';
+import dayjs from 'dayjs';
+import { BookDataType } from '@/app/actions/bookActions';
 
 interface TableProps {
-  data: MockdataType[];
+  data: BookDataType[];
 }
+
+type SortingBookType =
+  | 'bookName'
+  | 'genre'
+  | 'rating'
+  | 'startDate'
+  | 'endDate';
 
 interface ThProps {
   children: React.ReactNode;
@@ -40,11 +48,8 @@ interface ThProps {
 }
 
 function Th({ children, sort, reversed, sorted, onSort }: Readonly<ThProps>) {
-  const Icon = sorted
-    ? reversed
-      ? IconChevronUp
-      : IconChevronDown
-    : IconSelector;
+  const selectIcon = reversed ? IconChevronUp : IconChevronDown;
+  const Icon = sorted ? selectIcon : IconSelector;
   return (
     <Table.Th className={classes.th}>
       {sort ? (
@@ -67,7 +72,7 @@ function Th({ children, sort, reversed, sorted, onSort }: Readonly<ThProps>) {
   );
 }
 
-function filterData(data: MockdataType[], search: string) {
+function filterData(data: BookDataType[], search: string) {
   const query = search.toLowerCase().trim();
   return data.filter((item) =>
     JSON.stringify(item).toLowerCase().includes(query)
@@ -75,9 +80,9 @@ function filterData(data: MockdataType[], search: string) {
 }
 
 function sortData(
-  data: MockdataType[],
+  data: BookDataType[],
   payload: {
-    sortBy: keyof MockdataType | null;
+    sortBy: SortingBookType;
     reversed: boolean;
     search: string;
   }
@@ -91,10 +96,10 @@ function sortData(
   return filterData(
     [...data].sort((a, b) => {
       if (payload.reversed) {
-        return b[sortBy].localeCompare(a[sortBy]);
+        return b[sortBy].toString().localeCompare(a[sortBy].toString());
       }
 
-      return a[sortBy].localeCompare(b[sortBy]);
+      return a[sortBy].toString().localeCompare(b[sortBy].toString());
     }),
     payload.search
   );
@@ -103,11 +108,10 @@ function sortData(
 const TableView = ({ data }: TableProps) => {
   const [search, setSearch] = useState('');
   const [sortedData, setSortedData] = useState(data);
-  const [sortBy, setSortBy] = useState<keyof MockdataType | null>(null);
+  const [sortBy, setSortBy] = useState<SortingBookType>('bookName');
   const [reverseSortDirection, setReverseSortDirection] = useState(false);
-  const [opened, { open, close }] = useDisclosure(false);
 
-  const setSorting = (field: keyof MockdataType) => {
+  const setSorting = (field: SortingBookType) => {
     const reversed = field === sortBy ? !reverseSortDirection : false;
     setReverseSortDirection(reversed);
     setSortBy(field);
@@ -123,21 +127,20 @@ const TableView = ({ data }: TableProps) => {
   };
 
   const rows = sortedData.map((row) => (
-    <Table.Tr key={row.title}>
+    <Table.Tr key={row.bookName}>
       <Table.Td>
-        <Menu width={200} shadow="md">
+        <Menu width={225} shadow="md">
           <Menu.Target>
             <ActionIcon variant="default" radius="lg">
               <IconDotsVertical size={16} stroke={1.5} />
             </ActionIcon>
           </Menu.Target>
           <Menu.Dropdown>
-            <ShowBookModal opened={opened} onClose={close} bookId={row.id} />
             <Menu.Item leftSection={<IconFileSymlink size={16} stroke={1.5} />}>
-              <UnstyledButton onClick={open}>View Record</UnstyledButton>
+              <Link href={`/records/books/${row.bookId}`}>Show Record</Link>
             </Menu.Item>
-            <Menu.Item leftSection={<IconStar size={16} stroke={1.5} />}>
-              Add to Favourites
+            <Menu.Item leftSection={<IconHeart size={16} stroke={1.5} />}>
+              {row.favourite ? 'Remove from Favourites' : 'Add to Favourites'}
             </Menu.Item>
             <Menu.Item
               color="red"
@@ -149,13 +152,22 @@ const TableView = ({ data }: TableProps) => {
         </Menu>
       </Table.Td>
       <Table.Td>
-        <Image src={row.image} w={125} h={200} alt={row.title} />{' '}
+        <Image
+          src={row.coverPage}
+          fit="contain"
+          w={150}
+          h={200}
+          alt={row.bookName}
+        />{' '}
       </Table.Td>
-      <Table.Td>{row.title}</Table.Td>
       <Table.Td>
-        {row.description.length > 200
-          ? `${row.description.slice(0, 200)}...`
-          : row.description}
+        <Text size="md">{row.bookName}</Text>
+      </Table.Td>
+      <Table.Td>
+        <Text size="md">{row.genre}</Text>
+      </Table.Td>
+      <Table.Td>
+        <Rating size="sm" fractions={2} value={row.rating} />
       </Table.Td>
       <Table.Td>
         <ScrollArea
@@ -173,8 +185,8 @@ const TableView = ({ data }: TableProps) => {
           ))}
         </ScrollArea>
       </Table.Td>
-      <Table.Td>{row.startDate}</Table.Td>
-      <Table.Td>{row.endDate}</Table.Td>
+      <Table.Td>{dayjs(row.startDate).format('DD/MM/YY')}</Table.Td>
+      <Table.Td>{dayjs(row.endDate).format('DD/MM/YY')}</Table.Td>
     </Table.Tr>
   ));
 
@@ -202,7 +214,7 @@ const TableView = ({ data }: TableProps) => {
               sort={false}
               sorted={false}
               reversed={false}
-              onSort={() => setSorting('title')}
+              onSort={() => setSorting('bookName')}
             >
               {' '}
             </Th>
@@ -210,31 +222,39 @@ const TableView = ({ data }: TableProps) => {
               sort={false}
               sorted={false}
               reversed={false}
-              onSort={() => setSorting('title')}
+              onSort={() => setSorting('bookName')}
             >
               Cover Page
             </Th>
             <Th
               sort={true}
-              sorted={sortBy === 'title'}
+              sorted={sortBy === 'bookName'}
               reversed={reverseSortDirection}
-              onSort={() => setSorting('title')}
+              onSort={() => setSorting('bookName')}
             >
               Title
             </Th>
             <Th
               sort={true}
-              sorted={sortBy === 'description'}
+              sorted={sortBy === 'genre'}
               reversed={reverseSortDirection}
-              onSort={() => setSorting('description')}
+              onSort={() => setSorting('genre')}
             >
-              Description
+              Genre
+            </Th>
+            <Th
+              sort={true}
+              sorted={sortBy === 'rating'}
+              reversed={reverseSortDirection}
+              onSort={() => setSorting('rating')}
+            >
+              Rating
             </Th>
             <Th
               sort={false}
               sorted={false}
               reversed={false}
-              onSort={() => setSorting('title')}
+              onSort={() => setSorting('bookName')}
             >
               Tags
             </Th>

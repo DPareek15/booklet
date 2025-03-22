@@ -19,48 +19,22 @@ import { DateInput } from '@mantine/dates';
 import { useState } from 'react';
 import { useForm } from '@mantine/form';
 import { IconCircleCheck } from '@tabler/icons-react';
-import { v4 as uuidv4 } from 'uuid';
+import { BookDataType } from '@/app/actions/bookActions';
+import { emptyBookValues } from '@/data/mockdata';
+import classes from './AddBookForm.module.css';
 
-export interface BookDataType {
-  bookId: string;
-  bookName: string;
-  authorName: string;
-  description: string;
-  genre: string;
-  tags: string[];
-  startDate: Date;
-  endDate: Date;
-  coverPage: string;
-  publisherName: string;
-  isbnNumber?: string;
-  rating: number;
-  review?: string;
-  favourite: boolean;
+interface AddBookFormProps {
+  bookData: BookDataType | null;
 }
 
-const AddBookForm = () => {
+const AddBookForm = ({ bookData }: AddBookFormProps) => {
   const [active, setActive] = useState(0);
   const nextStep = () => setActive((curr) => (curr < 3 ? curr + 1 : curr));
   const prevStep = () => setActive((curr) => (curr > 0 ? curr - 1 : curr));
 
   const bookForm = useForm({
     mode: 'controlled',
-    initialValues: {
-      bookId: uuidv4(),
-      bookName: '',
-      authorName: '',
-      description: '',
-      genre: 'fiction',
-      tags: [],
-      startdate: new Date(),
-      endDate: new Date(),
-      coverPage: '',
-      publisherName: '',
-      isbnNumber: '',
-      rating: 0,
-      review: '',
-      favourite: false,
-    },
+    initialValues: bookData ?? emptyBookValues,
     validate: {
       bookName: (value) =>
         value.length < 2 ? 'Name must have at least 2 letters' : null,
@@ -68,7 +42,7 @@ const AddBookForm = () => {
   });
 
   return (
-    <div>
+    <div className={classes.root}>
       <form onSubmit={bookForm.onSubmit((values) => console.log(values))}>
         <Stepper
           active={active}
@@ -121,7 +95,8 @@ const AddBookForm = () => {
                     placeholder="Only alphanumeric charcaters and spaces are allowed"
                     resize="vertical"
                     w={'50%'}
-                    minLength={5}
+                    minRows={2}
+                    maxRows={8}
                     className="m-4"
                   />
                 </Stack>
@@ -291,8 +266,8 @@ const AddBookForm = () => {
                     label="Publisher Name"
                     placeholder="Only alphanumeric characters and spaces are allowed"
                     name="publisher"
-                    key={bookForm.key('publisher')}
-                    {...bookForm.getInputProps('publisher')}
+                    key={bookForm.key('publisherName')}
+                    {...bookForm.getInputProps('publisherName')}
                     w={'50%'}
                     className="m-4"
                   />
@@ -300,8 +275,8 @@ const AddBookForm = () => {
                     label="ISBN Number"
                     placeholder="Only numbers and hyphens are allowed"
                     name="isbn"
-                    key={bookForm.key('isbn')}
-                    {...bookForm.getInputProps('isbn')}
+                    key={bookForm.key('isbnNumber')}
+                    {...bookForm.getInputProps('isbnNumber')}
                     w={'50%'}
                     className="m-4"
                   />
@@ -355,7 +330,7 @@ const AddBookForm = () => {
             </Stack>
           </Stepper.Completed>
         </Stepper>
-        <Group justify="center" mt="xl" className="mb-10">
+        <Group justify="center" mt="xl" pr={175} mb={10}>
           <Button
             variant="default"
             onClick={() => (active === 3 ? setActive(0) : prevStep())}

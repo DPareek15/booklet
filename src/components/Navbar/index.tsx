@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import {
   IconDeviceDesktopAnalytics,
   IconHome2,
@@ -15,6 +14,7 @@ import BookletLogo from '../BookletLogo';
 import { DarkModeButton } from './DarkModeButton';
 import { AddNewButton } from '../AddNewButton';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 interface NavbarLinkProps {
   icon: typeof IconHome2;
@@ -43,28 +43,38 @@ function NavbarLink({
 }
 
 const navData = [
-  { icon: IconHome2, label: 'Home', value: '/' },
-  { icon: IconTable, label: 'Records', value: '/records' },
-  { icon: IconDeviceDesktopAnalytics, label: 'Analytics', value: '/analytics' },
+  { icon: IconHome2, label: 'Home', value: '/', id: '' },
+  { icon: IconTable, label: 'Records', value: '/records', id: 'records' },
+  {
+    icon: IconDeviceDesktopAnalytics,
+    label: 'Analytics',
+    value: '/analytics',
+    id: 'analytics',
+  },
   {
     icon: IconLibraryPlus,
     label: 'Recommendations',
     value: '/recommendations',
+    id: 'recommendations',
   },
-  { icon: IconUser, label: 'Account', value: '/account' },
-  { icon: IconInfoSquareRounded, label: 'About Us', value: '/info' },
+  { icon: IconUser, label: 'Account', value: '/account', id: 'account' },
+  {
+    icon: IconInfoSquareRounded,
+    label: 'About Us',
+    value: '/info',
+    id: 'info',
+  },
 ];
 
 export default function Navbar() {
-  const [active, setActive] = useState(0);
+  const pathName = usePathname();
 
-  const links = navData.map((link, index) => (
+  const links = navData.map((link) => (
     <Link key={link.label} href={link.value}>
       <NavbarLink
         {...link}
         key={link.label}
-        active={index === active}
-        onClick={() => setActive(index)}
+        active={pathName.slice(1).split('/')[0] === link.id}
       />
     </Link>
   ));

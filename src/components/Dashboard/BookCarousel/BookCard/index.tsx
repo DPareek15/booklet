@@ -15,7 +15,7 @@ import { useDisclosure } from '@mantine/hooks';
 import ShowBookModal from '@/components/ShowBookModal';
 import Link from 'next/link';
 import { IconExternalLink } from '@tabler/icons-react';
-import { BookDataType } from '@/components/AddBookForm';
+import { BookDataType } from '@/app/actions/bookActions';
 
 interface BookCardProps {
   bookData: BookDataType;

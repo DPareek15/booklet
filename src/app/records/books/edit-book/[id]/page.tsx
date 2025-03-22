@@ -1,20 +1,21 @@
 import { getBook } from '@/app/actions/bookActions';
-import BookDisplayScreen from '@/components/RecordsScreen/BookDisplayScreen';
+import AddBookForm from '@/components/AddBookForm';
 import { redirect } from 'next/navigation';
 
-type ShowBookProps = {
+type EditBookProps = {
   params: Promise<{ id: string }>;
 };
 
-async function ShowBook({ params }: Readonly<ShowBookProps>) {
+async function EditBook({ params }: Readonly<EditBookProps>) {
   const bookId = (await params).id;
   const bookData = await getBook(bookId);
   if (!bookData) redirect('/');
+
   return (
-    <div>
-      <BookDisplayScreen bookData={bookData} />
+    <div className={`flex flex-col h-full max-w-[1500px] p-10 m-15`}>
+      <AddBookForm bookData={bookData} />
     </div>
   );
 }
 
-export default ShowBook;
+export default EditBook;

@@ -106,7 +106,7 @@ export function AddNewButton({ showContent, classes }: Readonly<Props>) {
     //     </Menu.Item>
     //   </Menu.Dropdown>
     // </Menu>
-    <Link href={'/add-book'}>
+    <Link href={'/records/books/add-book'}>
       <Button size="lg" w={60} pr={6} pl={6} pt={6} pb={6}>
         <IconPlus size={24} stroke={2} className={classes} />
       </Button>

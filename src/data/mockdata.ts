@@ -1,14 +1,22 @@
-import { BookDataType } from '@/components/AddBookForm';
+import { BookDataType } from '@/app/actions/bookActions';
+import { v4 as uuidv4 } from 'uuid';
 
-export interface MockdataType {
-  id: string;
-  bookName: string;
-  description: string;
-  image: string;
-  tags: string[];
-  startDate: string;
-  endDate: string;
-}
+export const emptyBookValues = {
+  bookId: uuidv4(),
+  bookName: '',
+  authorName: '',
+  description: '',
+  genre: 'fiction',
+  tags: [],
+  startdate: new Date(),
+  endDate: new Date(),
+  coverPage: '',
+  publisherName: '',
+  isbnNumber: '',
+  rating: 0,
+  review: '',
+  favourite: false,
+};
 
 export const mockData: BookDataType[] = [
   {
@@ -20,7 +28,7 @@ export const mockData: BookDataType[] = [
     genre: 'Fantasy',
     tags: ['Fantasy', 'Adventure', 'Classic'],
     startDate: new Date('2024-02-01'),
-    endDate: new Date('2025-03-15'),
+    endDate: new Date('2024-03-15'),
     coverPage:
       'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1546071216i/5907.jpg',
     publisherName: 'Houghton Mifflin',

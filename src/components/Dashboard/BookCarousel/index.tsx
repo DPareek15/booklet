@@ -5,11 +5,16 @@ import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { mockData as data } from '@/data/mockdata';
 
 export function BookCarousel() {
-  const slides = data.map((item) => (
-    <Carousel.Slide key={item.bookName}>
-      <BookCard bookData={item} />
-    </Carousel.Slide>
-  ));
+  const slides = data
+    .toSorted((a, b) => {
+      return b.startDate.getTime() - a.startDate.getTime();
+    })
+    .slice(0, 5)
+    .map((item) => (
+      <Carousel.Slide key={item.bookName}>
+        <BookCard bookData={item} />
+      </Carousel.Slide>
+    ));
 
   return (
     <Carousel

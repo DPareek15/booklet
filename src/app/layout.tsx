@@ -31,7 +31,7 @@ export default function RootLayout({
           <div className="flex flex-row h-full w-full p-0">
             <Navbar />
             <div
-              className={`flex flex-col relative top-0 left-[80px] h-full w-[calc(100vw-80px)] p-0`}
+              className={`flex flex-col relative top-0 left-[80px] h-full w-[calc(100vw-80px)] p-0 base`}
             >
               <MainHeader />
               {children}

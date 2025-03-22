@@ -6,6 +6,7 @@ import {
 } from '@tabler/icons-react';
 import { Group, Paper, SimpleGrid, Text } from '@mantine/core';
 import classes from './StatsCards.module.css';
+import { mockData as bookData } from '@/data/mockdata';
 
 const icons = {
   books: IconBook2,
@@ -15,7 +16,7 @@ const icons = {
 };
 
 const data = [
-  { title: 'Books', icon: 'books', value: '00' },
+  { title: 'Books', icon: 'books', value: bookData.length.toString() },
   { title: 'Series', icon: 'series', value: '00' },
   { title: 'Bookmarks', icon: 'bookmarks', value: '00' },
   { title: 'Days', icon: 'days', value: '00' },
